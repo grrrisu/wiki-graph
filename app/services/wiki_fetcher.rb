@@ -8,8 +8,9 @@ class WikiFetcher
 
   def get name
     html = fetch_term(name).body
+    File.write(Rails.root.join('tmp', 'example_raw.html'), html.force_encoding("UTF-8"))
     text = filter_text(html)
-    parse(text)
+    WikiParser.parse(text)
   end
 
   def term_request name
@@ -26,15 +27,6 @@ class WikiFetcher
   def filter_text html
     doc = Nokogiri::HTML(html)
     doc.css('textarea').text
-  end
-
-  def parse text
-    @parser = WikiCloth::Parser.new(data: text)
-    @parser.to_html
-  end
-
-  def linked_terms
-    @parser.internal_links
   end
 
 end
