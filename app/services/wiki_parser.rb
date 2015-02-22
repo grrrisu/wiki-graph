@@ -69,5 +69,4 @@ class WikiParser < WikiCloth::Parser
     end.reverse
   end
 
-
 end

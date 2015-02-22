@@ -1,0 +1,19 @@
+dry_setting: &dry_setting
+  adapter: postgresql
+  host: localhost
+  encoding: utf8
+  username: localuser
+  password:
+  host: localhost
+
+development:
+  <<: *dry_setting
+  database: wiki_graph_development
+
+test:
+  <<: *dry_setting
+  database: wiki_graph_test
+
+production:
+  <<: *dry_setting
+  database: wiki_graph_production
