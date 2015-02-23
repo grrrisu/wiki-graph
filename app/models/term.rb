@@ -7,21 +7,22 @@ class Term < ActiveRecord::Base
   validates :name, presence: true, uniqueness: true
   validates :language, presence: true, inclusion: { in: %w{de en}}
 
-  def self.find_or_create name, language = 'de'
+  def self.find_or_fetch name, language = 'de'
     unless term = Term.where(name: name).first
-      term = build(name, language)
+      term = fetch(name, language)
     end
     term
   end
 
-  def self.build name, language
-    fetcher = WikiFetcher.new(language)
-    fetcher.get(name)
-    attributes = fetcher.get_attributes.merge(language: language)
+  def self.fetch name, language
+    html = WikiFetcher.new(language).get(name)
+    attributes = {language: language, name: name }
+    attributes.merge! WikiExtractor.new(html).extract_attributes
     term   = Term.create!(attributes)
 
-    parser = WikiParser.parse(name, markup)
+    parser = WikiParser.parse(name, term.markup)
     parser.weight_linked_terms
+    term
   end
 
 end
