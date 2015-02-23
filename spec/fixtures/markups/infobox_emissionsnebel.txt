@@ -1,0 +1,139 @@
+<onlyinclude><includeonly>{{CoordinateSky
+|RaP={{{Rek|0/0/0}}}
+|DeP={{{Dek|+/0/0/0}}}
+|SizeP={{#if:{{{Size|}}}|{{{Size}}}|5.0}}
+|NameP={{#if:{{{Caption|}}}|{{{Caption}}}|{{PAGENAME}}}}
+|ObjectP={{#if:{{{Objekt|}}}|{{{Objekt}}}|{{#if:{{{Caption|}}}|{{{Caption}}}|{{PAGENAME}}}}}}
+|Viz1P={{{Viz1|}}}
+|Viz2P={{{Viz2|}}}
+|Viz3P={{{Viz3|}}}
+|Viz4P={{{Viz4|}}}
+|Viz5P={{{Viz5|}}}
+}}
+{| class="wikitable float-right" style="width:33%; min-width:250px; max-width:400px;"
+|--
+! colspan="2" style="background-color:LightGrey;" |<big>Emissionsnebel</big>
+|--
+! colspan="2" style="background-color:Gainsboro;" | {{#if:{{{Name|}}}|{{{Name}}}|{{PAGENAME}}}}
+{{#if: {{{Bild|}}}|
+{{!-!}} colspan="2" style="background-color:Black; color:White; text-align:center;" {{!}} {{#ifexist:Media:{{{Bild}}}|[[Datei:{{{Bild}}}|310px|{{{Bildtext|}}}]]|{{{Bild}}}}}
+{{#if: {{{Bildtext}}}|
+{{!-!}} colspan="2" style="background-color:Gainsboro; color:Black; text-align:center;" {{!}} {{{Bildtext}}}
+}}
+}}
+|--
+{{#if:{{{Sternbild|}}}|
+{{!}} [[Sternbild]]
+{{!}} nowrap {{!}} {{Sternbildlink|{{{Sternbild|}}}}}
+}}
+|--
+| colspan="2" style="background-color:Gainsboro; text-align:center;" | '''Position'''<br /><small>[[Äquinoktium]]:&nbsp;[[J2000.0]], [[Epoche (Astronomie)|Epoche]]:&nbsp;J2000.0</small>
+|--
+| [[Rektaszension]]
+| nowrap |{{ParmPart|1|{{{Rek|0/0/0}}}}}h {{formatnum:{{ParmPart|2|{{{Rek|0/0/0}}}}}}}m {{#if:{{ParmPart|3|{{{Rek|0/0/0}}}}}|{{formatnum:{{ParmPart|3|{{{Rek|0/0/0}}}}}}}s}} {{{RekDekRef|}}}
+|--
+| [[Deklination (Astronomie)|Deklination]]
+| nowrap |{{ParmPart|1|{{{Dek|+/0/0/0}}}}}{{ParmPart|2|{{{Dek|+/0/0/0}}}}}° {{formatnum:{{ParmPart|3|{{{Dek|+/0/0/0}}}}}}}&prime; {{#if:{{ParmPart|4|{{{Dek|+/0/0/0}}}}}|{{formatnum:{{ParmPart|4|{{{Dek|+/0/0/0}}}}}}}&Prime;}} {{{RekDekRef|}}}
+|--
+! colspan="2" style="background-color:Gainsboro;" | Erscheinungsbild
+|--
+{{#if:{{{magV|}}}|
+{{!}} [[Scheinbare Helligkeit]]&nbsp;<small>(visuell)</small>
+{{!}} nowrap {{!}} {{{magV}}} mag&nbsp;&nbsp;{{{magVRef|}}}
+}}
+{{#if:{{{magB|}}}|
+{{!-!}}  [[Scheinbare Helligkeit]]&nbsp;<small>(B-Band)</small>
+{{!}} nowrap {{!}} {{{magB}}} mag&nbsp;&nbsp;{{{magBRef|}}}
+}}
+{{#if:{{{app-Durchmesser|}}}|
+{{!-!}} [[Scheinbare Größe|Winkelausdehnung]]
+{{!}} nowrap {{!}} {{{app-Durchmesser}}}&nbsp;&nbsp;{{{appRef|}}}
+}}
+|--
+! colspan="2" style="background-color:Gainsboro;" | Ionisierende Quelle
+|--
+{{#if:{{{IonQ-Name|}}}|
+{{!}} Bezeichnung
+{{!}} nowrap {{!}} {{{IonQ-Name}}}&nbsp;&nbsp;{{{IonQ-NameRef|}}}
+}}
+|--
+{{#if:{{{IonQ-Typ|}}}|
+{{!}} Typ
+{{!}} nowrap {{!}} {{{IonQ-Typ}}}&nbsp;&nbsp;{{{IonQ-TypRef|}}}
+}}
+|--
+! colspan="2" style="background-color:Gainsboro;" | Physikalische Daten
+|--
+{{#if:{{{Zugehörigkeit|}}}|
+{{!}} [[Galaxie|Zugehörigkeit]]
+{{!}} nowrap {{!}} {{{Zugehörigkeit}}}&nbsp;&nbsp;{{{GruppeRef|}}}
+}}
+|--
+{{#if:{{{z|}}}|
+{{!}} [[Rotverschiebung]]
+{{!}} nowrap {{!}} {{{z}}}&nbsp;&nbsp;{{{zVradRef|}}}
+}}
+|--
+{{#if:{{{V-Radial|}}}|
+{{!}} [[Radialgeschwindigkeit]]
+{{!}} nowrap {{!}} {{{V-Radial}}} km/s&nbsp;&nbsp;{{{zVradRef|}}}
+}}
+|--
+{{#if:{{{LJ|}}}{{{PC|}}}|
+{{!-!}} Entfernung&nbsp;{{{LJPCRef|}}}
+{{!}} nowrap {{!}}<!--
+-->{{#if:{{{LJ|}}}|{{{LJ}}} [[Lichtjahr|Lj]]{{#if:{{{PC|}}}|<br /><small>({{{PC}}} <!--
+-->[[Parsec|pc]])</small>}}|{{{PC}}} [[Parsec|pc]]}}<!--
+-->}}
+{{#if:{{{Absolut|}}}|
+{{!-!}} [[Absolute Helligkeit]]
+{{!}} nowrap {{!}} {{{Absolut}}} mag {{{AbsolutRef|}}}
+}}
+|--
+{{#if:{{{Masse|}}}|
+{{!}} [[Masse (Physik)|Masse]]
+{{!}} nowrap {{!}} {{{Masse}}} [[Sonnenmasse|M<sub>&#x2609;</sub>]] {{{MasseRef|}}}
+}}
+|--
+{{#if:{{{Abs-Durchmesser|}}}|
+{{!}} [[Durchmesser]]
+{{!}} nowrap {{!}} {{{Abs-Durchmesser}}} Lj {{{Abs-DurchRef|}}}
+}}
+|--
+{{#if:{{{Alter|}}}|
+{{!}} Alter
+{{!}} nowrap {{!}} {{{Alter}}} [[Jahr]]e {{{AlterRef|}}}
+}}
+|-
+! colspan="2" style="background-color:Gainsboro;" | '''{{#if:{{{NGC|}}}{{{IC|}}}|[[Liste der Entdecker des NGC/IC-Katalogs|Geschichte]]|Geschichte}}'''
+|--
+{{#if:{{{Entdecker|}}}|
+{{!}} Entdeckung
+{{!}} nowrap {{!}} {{{Entdecker}}}
+}}
+|--
+{{#if:{{{Entdeckungsdatum|}}}|
+{{!}} Datum der Entdeckung
+{{!}} nowrap {{!}} {{{Entdeckungsdatum}}} {{Infobox Astronomie/Entdeckungskategorie|Datum={{{Entdeckungsdatum}}}}}
+}}
+|--
+|-
+! colspan="2" style="background-color:Gainsboro;" | '''[[Liste der astronomischen Kataloge|Katalogbezeichnungen]]'''
+|-
+| colspan="2" style="text-align:center;" |<!--
+-->{{#if:{{{MES|}}}| &nbsp;[[Messier-Katalog|M]]&nbsp;{{{MES}}} •}}<!--
+-->{{#if:{{{NGC|}}}| &nbsp;[[New General Catalogue|NGC]]&nbsp;{{{NGC}}} •}}<!--
+-->{{#if:{{{IC|}}}| &nbsp;[[Index-Katalog|IC]]&nbsp;{{{IC}}} •}}<!--
+-->{{#if:{{{GC|}}}| &nbsp;[[General Catalogue of Nebulae and Clusters|GC]]&nbsp;{{{GC}}} •}}<!--
+-->{{#if:{{{H|}}}| &nbsp;[[Liste der astronomischen Kataloge|H]]&nbsp;{{{H}}} •}}<!--
+-->{{#if:{{{h|}}}| &nbsp;[[Liste der astronomischen Kataloge|h]]&nbsp;{{{h}}} •}}<!--
+-->{{#if:{{{Katalog|}}}| &nbsp;{{{Katalog}}}}}
+|}
+<!-- Kategorisierung via Vorlage
+-->{{#if:{{NAMESPACE}}|<!-- nichts -->|[[Kategorie:Individueller astronomischer Nebel]]}}<!--
+-->{{#if:{{Boolandnot|{{{Sternbild|}}}|{{NAMESPACE}}}}|{{Sternbildkategorie|{{{Sternbild|}}}}}}}<!--
+-->{{#if:{{Boolandnot|{{{NGC|}}}|{{NAMESPACE}}}}|[[Kategorie:Emissionsnebel im NGC-Katalog|{{#expr: floor({{{NGC|0}}}/1000)}}{{#expr: {{{NGC|0}}} mod 1000}}]]}}<!--
+-->{{#if:{{{IC|}}}|[[Kategorie:Index-Katalog]]}}<!--
+--></includeonly></onlyinclude>
+
+{{Dokumentation}}

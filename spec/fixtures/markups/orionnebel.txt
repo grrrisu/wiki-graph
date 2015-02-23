@@ -2,7 +2,7 @@
 |             Name = Daten des Orionnebels
 |             Bild = Orion Nebula - Hubble 2006 mosaic.jpg
 |         Bildtext = Aus verschiedenen HST-Aufnahmen zusammengesetztes Bild des Orionnebels
-|        Sternbild = Ori
+|        Sternbild = Orion
 |              Rek = 5/35.3
 |              Dek = −/5/23.5
 |             Size = 90

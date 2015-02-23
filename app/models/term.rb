@@ -14,7 +14,7 @@ class Term < ActiveRecord::Base
     term
   end
 
-  def self.fetch name, language
+  def self.fetch name, language = 'de'
     html = WikiFetcher.new(language).get(name)
     attributes = {language: language, name: name }
     attributes.merge! WikiExtractor.new(html).extract_attributes
@@ -23,6 +23,11 @@ class Term < ActiveRecord::Base
     parser = WikiParser.parse(name, term.markup)
     parser.weight_linked_terms
     term
+  end
+
+  def self.parse name, language = 'de'
+    html = WikiFetcher.new(language).get(name)
+    WikiParser.parse(name, WikiExtractor.new(html).extract_markup)
   end
 
 end

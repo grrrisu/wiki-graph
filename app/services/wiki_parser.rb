@@ -46,7 +46,7 @@ class WikiParser < WikiCloth::Parser
   end
 
   def markup
-    @parser.options[:data]
+    options[:data]
   end
 
   def link_for(page, text)
