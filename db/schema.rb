@@ -30,8 +30,9 @@ ActiveRecord::Schema.define(version: 20150222230905) do
   add_index "links", ["term_id"], name: "index_links_on_term_id", using: :btree
 
   create_table "terms", force: :cascade do |t|
-    t.string   "page",       null: false
-    t.string   "name"
+    t.string   "name",       null: false
+    t.string   "language"
+    t.text     "markup"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
