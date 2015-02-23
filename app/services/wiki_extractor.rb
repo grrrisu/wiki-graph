@@ -11,6 +11,7 @@ class WikiExtractor
     if name = extract_name
       attributes[:name] = name
     end
+    attributes
   end
 
   def extract_markup
