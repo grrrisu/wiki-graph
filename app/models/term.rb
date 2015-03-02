@@ -3,6 +3,7 @@ class Term < ActiveRecord::Base
   has_many :linking, foreign_key: :linked_term_id, class_name: 'Link'
   has_many :linked_terms,  through: :links, class_name: 'Term', dependent: :destroy
   has_many :linking_terms, through: :linking, class_name: 'Term', source: :term
+  has_and_belongs_to_many :categories
 
   validates :name, presence: true, uniqueness: true
   validates :language, presence: true, inclusion: { in: %w{de en}}
@@ -25,6 +26,8 @@ class Term < ActiveRecord::Base
                           linking_term_counter: link_item[1][1],
                           weight: link_item[1][2]
     end
+
+    builder.categories
 
     term
   end

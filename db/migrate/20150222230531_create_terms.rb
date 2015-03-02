@@ -3,8 +3,6 @@ class CreateTerms < ActiveRecord::Migration
     create_table :terms do |t|
       t.string :name, null: false
       t.string :language
-      t.text   :markup
-      t.text   :content
 
       t.timestamps null: false
     end

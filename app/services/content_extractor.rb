@@ -2,7 +2,7 @@ class ContentExtractor
 
   attr_reader :doc
 
-  IGNORE_LINKS = %w{Spezial:ISBN-Suche Datei: File:}
+  IGNORE_LINKS = %w{Spezial:ISBN-Suche Datei: File: Wikipedia:Kategorien}
 
   def initialize html
     @doc = Nokogiri::HTML(html)
@@ -25,16 +25,15 @@ class ContentExtractor
   end
 
   def linked_terms
-    @linked_terms ||= content.css("a[href^='/wiki/']").map do |link|
-      href = linked_page(link)
-      if ignore_link(href) && link.text.present?
-        [href, link.text]
-      end
-    end.compact
+    @linked_terms ||= internal_links(content)
+  end
+
+  def category_box
+    doc.css('#catlinks')
   end
 
   def categories
-    doc.css('#catlinks')
+    @categories ||= internal_links(category_box)
   end
 
   def name
@@ -44,6 +43,15 @@ class ContentExtractor
   end
 
   private
+
+  def internal_links element
+    element.css("a[href^='/wiki/']").map do |link|
+      href = linked_page(link)
+      if ignore_link(href) && link.text.present?
+        [href, link.text]
+      end
+    end.compact
+  end
 
   def linked_page link
     URI.unescape(link.attribute('href').value.gsub('/wiki/', ''))

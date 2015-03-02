@@ -10,7 +10,7 @@ class TermBuilder
   end
 
   def create!
-    Term.create! name: extractor.name || name, content: extractor.content, language: language
+    Term.create! name: extractor.name || name, language: language
   end
 
   def weight_linked_terms
@@ -54,6 +54,17 @@ class TermBuilder
   def count_term_as_link links, term
     links.find {|link| link[0]  == name} ? 3 : 0
   end
+
+  # ---- categories ----
+
+  def categories
+    categories = extractor.categories.map {|c| c[0]}
+    found = categories.map do |category|
+      Category.where(name: category, language: language).first.try(:name)
+    end
+    WikiFetcher.new.get_linked_pages(categories - found)
+  end
+
 
   private
 
