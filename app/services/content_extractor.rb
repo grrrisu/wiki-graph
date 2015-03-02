@@ -2,7 +2,7 @@ class ContentExtractor
 
   attr_reader :doc
 
-  IGNORE_LINKS = %w{Spezial:ISBN-Suche Datei: File: Wikipedia:Kategorien}
+  IGNORE_LINKS = %w{Spezial:ISBN-Suche Datei: File: Wikipedia:Kategorien Hilfe:}
 
   def initialize html
     @doc = Nokogiri::HTML(html)
