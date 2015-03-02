@@ -4,11 +4,11 @@ class WikiParser < WikiCloth::Parser
 
   attr_reader :html, :text, :term
 
-  def self.parse(name, text)
-    new(data: text, term: name)
+  def self.parse term
+    new data: term.markup, term: term.name
   end
 
-  def initialize(options)
+  def initialize options
     super
     @term = options[:term]
     @html = to_html

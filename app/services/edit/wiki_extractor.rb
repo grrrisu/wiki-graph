@@ -14,6 +14,10 @@ class WikiExtractor
     attributes
   end
 
+  def extract_main
+    doc.css('#content')
+  end
+
   def extract_markup
     doc.css('textarea').text
   end

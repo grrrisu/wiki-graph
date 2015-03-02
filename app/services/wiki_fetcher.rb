@@ -15,7 +15,7 @@ class WikiFetcher
   def get_linked_pages linked_pages
     hydra = Typhoeus::Hydra.new
     requests = linked_pages.inject({}) do |requests, page|
-      request = term_request(page)
+      request = term_show_request(page)
       hydra.queue(request)
       requests[page] = request
       requests
@@ -23,20 +23,23 @@ class WikiFetcher
     hydra.run
     reponses = requests.each { |page, request|
       html = request.response.body
-      markup = WikiExtractor.new(html).extract_markup
-      requests[page] = markup
+      requests[page] = ContentExtractor.new(html)
     }
   end
 
-  def term_request name
+  def term_edit_request name
     Typhoeus::Request.new(
       "http://#{language}.wikipedia.org/w/index.php",
       params: { action: 'edit', title: name }
     )
   end
 
+  def term_show_request name
+    Typhoeus::Request.new "http://#{language}.wikipedia.org/wiki/#{name}"
+  end
+
   def fetch_term name
-    term_request(name).run
+    term_show_request(name).run
   end
 
 end

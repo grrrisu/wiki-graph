@@ -19,8 +19,8 @@ ActiveRecord::Schema.define(version: 20150222230905) do
   create_table "links", force: :cascade do |t|
     t.integer  "term_id"
     t.integer  "linked_term_id"
-    t.integer  "link_on_term_counter"
-    t.integer  "term_on_link_counter"
+    t.integer  "linked_term_counter"
+    t.integer  "linking_term_counter"
     t.integer  "weight"
     t.datetime "created_at",           null: false
     t.datetime "updated_at",           null: false
@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(version: 20150222230905) do
     t.string   "name",       null: false
     t.string   "language"
     t.text     "markup"
+    t.text     "content"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

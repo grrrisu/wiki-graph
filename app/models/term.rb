@@ -15,19 +15,18 @@ class Term < ActiveRecord::Base
   end
 
   def self.fetch name, language = 'de'
-    html = WikiFetcher.new(language).get(name)
-    attributes = {language: language, name: name }
-    attributes.merge! WikiExtractor.new(html).extract_attributes
-    term   = Term.create!(attributes)
+    builder = TermBuilder.new name, language
+    term = builder.create!
 
-    parser = WikiParser.parse(name, term.markup)
-    parser.weight_linked_terms
+    builder.weight_linked_terms.each do |link_item|
+      linked_term = Term.where(name: link_item[0]).first_or_create(language: language)
+      term.links.create!  linked_term_id: linked_term.id,
+                          linked_term_counter: link_item[1][0],
+                          linking_term_counter: link_item[1][1],
+                          weight: link_item[1][2]
+    end
+
     term
-  end
-
-  def self.parse name, language = 'de'
-    html = WikiFetcher.new(language).get(name)
-    WikiParser.parse(name, WikiExtractor.new(html).extract_markup)
   end
 
 end

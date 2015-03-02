@@ -4,6 +4,7 @@ class CreateTerms < ActiveRecord::Migration
       t.string :name, null: false
       t.string :language
       t.text   :markup
+      t.text   :content
 
       t.timestamps null: false
     end
