@@ -25,7 +25,7 @@ class TermBuilder
       @weight[term[0]] << term[1]
     end
     @weight.each do |term, counters|
-      @weight[term] << counters[0] + 2 * counters[1]
+      @weight[term] << counters[0] + 2 * counters[1].to_i
     end
     @weight.sort_by {|term, counters| counters.last }.reverse
   end

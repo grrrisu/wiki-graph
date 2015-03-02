@@ -2,12 +2,18 @@ class ContentExtractor
 
   attr_reader :doc
 
+  IGNORE_LINKS = %w{Spezial:ISBN-Suche Datei: File:}
+
   def initialize html
     @doc = Nokogiri::HTML(html)
   end
 
+  def valid?
+    content
+  end
+
   def content
-    doc.css('#mw-content-text').first
+    @content ||= doc.css('#mw-content-text').first
   end
 
   def text
@@ -20,7 +26,10 @@ class ContentExtractor
 
   def linked_terms
     @linked_terms ||= content.css("a[href^='/wiki/']").map do |link|
-      [linked_page(link), link.text] unless link.text.empty?
+      href = linked_page(link)
+      if ignore_link(href) && link.text.present?
+        [href, link.text]
+      end
     end.compact
   end
 
@@ -38,6 +47,10 @@ class ContentExtractor
 
   def linked_page link
     URI.unescape(link.attribute('href').value.gsub('/wiki/', ''))
+  end
+
+  def ignore_link link
+    IGNORE_LINKS.none? {|ignore| link.include?(ignore) }
   end
 
 end

@@ -21,9 +21,15 @@ class WikiFetcher
       requests
     end
     hydra.run
-    reponses = requests.each { |page, request|
+    reponses = requests.each { |name, request|
       html = request.response.body
-      requests[page] = ContentExtractor.new(html)
+      page = ContentExtractor.new(html)
+      if page.valid?
+        requests[name] = page
+      else
+        Rails.logger.warn("invalid page #{name}")
+        requests.delete(name)
+      end
     }
   end
 
