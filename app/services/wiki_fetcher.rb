@@ -13,24 +13,32 @@ class WikiFetcher
   end
 
   def get_linked_pages linked_pages
+    get_pages(fetch_multiple(linked_pages))
+  end
+
+  def fetch_multiple pages
     hydra = Typhoeus::Hydra.new
-    requests = linked_pages.inject({}) do |requests, page|
+    requests = pages.inject({}) do |requests, page|
       request = term_show_request(page)
       hydra.queue(request)
       requests[page] = request
       requests
     end
     hydra.run
-    reponses = requests.each { |name, request|
+    requests
+  end
+
+  def get_pages requests
+    requests.map do |name, request|
       html = request.response.body
-      page = ContentExtractor.new(html)
-      if page.valid?
-        requests[name] = page
+      extractor = ContentExtractor.new(html)
+      if extractor.valid?
+        {name: name, extractor: extractor}
       else
         Rails.logger.warn("invalid page #{name}")
-        requests.delete(name)
+        nil
       end
-    }
+    end.compact
   end
 
   def term_edit_request name
@@ -41,7 +49,7 @@ class WikiFetcher
   end
 
   def term_show_request name
-    Typhoeus::Request.new "http://#{language}.wikipedia.org/wiki/#{name}"
+    Typhoeus::Request.new "http://#{language}.wikipedia.org/wiki/#{name}", timeout: 20
   end
 
   def fetch_term name

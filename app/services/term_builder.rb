@@ -1,16 +1,46 @@
+# creates or updates a term and all associtations
 class TermBuilder
 
-  attr_reader :name, :language, :extractor, :linked, :linking, :weight
+  attr_reader :term
 
   def initialize name, language = 'de'
-    @name = name
-    @language = language
-    html = WikiFetcher.new(language).get name
-    @extractor = ContentExtractor.new(html)
+    @term = Term.where(name: name, language: language).first_or_initialize
   end
 
-  def create!
-    Term.create! name: extractor.name || name, language: language
+  def fetcher
+    @fetcher ||= WikiFetcher.new term.language
+  end
+
+  def extractor
+    @extractor ||= ContentExtractor.new fetcher.get(term.name)
+  end
+
+  def fetch
+    set_name
+    weight_linked_terms
+    term
+  end
+
+  def fetch!
+    fetch.save!
+  end
+
+  def set_name
+    name = extractor.name
+    term.name =  name if name.present?
+  end
+
+  def linked
+    @linked.sort_by{|t,c| c}.reverse
+  end
+
+  def linking
+    @linking.sort_by{|t,c| c}.reverse
+  end
+
+  def linked_terms
+    weight_linked_terms unless @weight
+    @weight.sort_by {|term, counters| counters.last }.reverse
   end
 
   def weight_linked_terms
@@ -18,32 +48,32 @@ class TermBuilder
     @linking = count_linking_terms
 
     @weight = {}
-    @linked.each do |term|
-      @weight[term[0]] = [] << term[1]
+    @linked.each do |term, count|
+      @weight[term] = [] << count
     end
-    @linking.each do |term|
-      @weight[term[0]] << term[1]
+    @linking.each do |term, count|
+      @weight[term] << count
     end
     @weight.each do |term, counters|
       @weight[term] << counters[0] + 2 * counters[1].to_i
     end
-    @weight.sort_by {|term, counters| counters.last }.reverse
+    @weight
   end
 
   def count_linked_terms
     count_term(extractor.linked_terms) do |item|
-      count_term_in_text(extractor.text, item[0]) +
-      count_term_in_text(extractor.text, item[1])
+      count_term_in_text(extractor.text, item[:name]) +
+      count_term_in_text(extractor.text, item[:text])
     end
   end
 
   def count_linking_terms
-    linked_pages = extractor.linked_terms.map {|term| term[0] }
-    responses = WikiFetcher.new.get_linked_pages(linked_pages)
+    linked_pages = extractor.linked_terms.map {|term| term[:name] }
+    responses = fetcher.get_linked_pages(linked_pages)
 
     count_term(responses) do |item|
-      count_term_in_text(item[1].text, name) +
-      count_term_as_link(item[1].linked_terms, name)
+      count_term_in_text(item[:extractor].text, term.name) +
+      count_term_as_link(item[:extractor].linked_terms, term.name)
     end
   end
 
@@ -51,7 +81,7 @@ class TermBuilder
     text.scan(/\b#{term}\b/).size
   end
 
-  def count_term_as_link links, term
+  def count_term_as_link links, name
     links.find {|link| link[0]  == name} ? 3 : 0
   end
 
@@ -68,15 +98,13 @@ class TermBuilder
 
   private
 
-  # list [ [page, name] ]
+  # list [ {page, name / extractor } ]
   def count_term list
     list.inject({}) do |hash, term|
-      hash[term[0]] ||= 0
-      hash[term[0]] += yield(term)
+      hash[term[:name]] ||= 0
+      hash[term[:name]] += yield(term)
       hash
-    end.sort_by do |key, value|
-      value
-    end.reverse
+    end
   end
 
 end
