@@ -19,8 +19,13 @@ class TermBuilder
     @link_builder ||= LinkBuilder.new(term, extractor)
   end
 
+  def category_builder
+    CategoryBuilder.new(term, extractor)
+  end
+
   def fetch
     set_name
+    term.categories = category_builder.fetch
     link_builder.weight_linked_terms
     term
   end
@@ -42,12 +47,6 @@ class TermBuilder
 
   # ---- categories ----
 
-  def categories
-    categories = extractor.categories.map {|c| c[0]}
-    found = categories.map do |category|
-      Category.where(name: category, language: language).first.try(:name)
-    end
-    WikiFetcher.new.get_linked_pages(categories - found)
-  end
+  
 
 end
