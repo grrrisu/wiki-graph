@@ -1,82 +1,52 @@
+# creates or updates a term and all associtations
 class TermBuilder
 
-  attr_reader :name, :language, :extractor, :linked, :linking, :weight
+  attr_reader :term
 
   def initialize name, language = 'de'
-    @name = name
-    @language = language
-    html = WikiFetcher.new(language).get name
-    @extractor = ContentExtractor.new(html)
+    @term = Term.find_or_build(name, language)
   end
 
-  def create!
-    Term.create! name: extractor.name || name, language: language
+  def fetcher
+    @fetcher ||= WikiFetcher.new term.language
   end
 
-  def weight_linked_terms
-    @linked = count_linked_terms
-    @linking = count_linking_terms
-
-    @weight = {}
-    @linked.each do |term|
-      @weight[term[0]] = [] << term[1]
-    end
-    @linking.each do |term|
-      @weight[term[0]] << term[1]
-    end
-    @weight.each do |term, counters|
-      @weight[term] << counters[0] + 2 * counters[1].to_i
-    end
-    @weight.sort_by {|term, counters| counters.last }.reverse
+  def extractor
+    @extractor ||= ContentExtractor.new fetcher.get(term.name)
   end
 
-  def count_linked_terms
-    count_term(extractor.linked_terms) do |item|
-      count_term_in_text(extractor.text, item[0]) +
-      count_term_in_text(extractor.text, item[1])
-    end
+  def link_builder
+    @link_builder ||= LinkBuilder.new(term, extractor)
   end
 
-  def count_linking_terms
-    linked_pages = extractor.linked_terms.map {|term| term[0] }
-    responses = WikiFetcher.new.get_linked_pages(linked_pages)
-
-    count_term(responses) do |item|
-      count_term_in_text(item[1].text, name) +
-      count_term_as_link(item[1].linked_terms, name)
-    end
+  def category_builder
+    CategoryBuilder.new(term, extractor)
   end
 
-  def count_term_in_text text, term
-    text.scan(/\b#{term}\b/).size
+  def fetch
+    set_name
+    term.categories = category_builder.fetch
+    link_builder.weight_linked_terms
+    term
   end
 
-  def count_term_as_link links, term
-    links.find {|link| link[0]  == name} ? 3 : 0
+  def fetch!
+    fetch.save!
+  end
+
+  def set_name
+    name = extractor.name
+    term.name =  name if name.present?
+  end
+
+  def linked_terms
+    link_builder.weight_linked_terms if term.links.empty?
+    sorted = term.links.sort_by {|term| term.weight }.reverse
+    sorted.map {|link| [link.linked_term.name, link.linked_term_counter, link.linking_term_counter, link.weight]}
   end
 
   # ---- categories ----
 
-  def categories
-    categories = extractor.categories.map {|c| c[0]}
-    found = categories.map do |category|
-      Category.where(name: category, language: language).first.try(:name)
-    end
-    WikiFetcher.new.get_linked_pages(categories - found)
-  end
-
-
-  private
-
-  # list [ [page, name] ]
-  def count_term list
-    list.inject({}) do |hash, term|
-      hash[term[0]] ||= 0
-      hash[term[0]] += yield(term)
-      hash
-    end.sort_by do |key, value|
-      value
-    end.reverse
-  end
+  
 
 end

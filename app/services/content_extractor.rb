@@ -2,7 +2,7 @@ class ContentExtractor
 
   attr_reader :doc
 
-  IGNORE_LINKS = %w{Spezial:ISBN-Suche Datei: File: Wikipedia:Kategorien Hilfe:}
+  IGNORE_LINKS = %w{Spezial:ISBN-Suche Datei: File: Wikipedia:Kategorien Hilfe: (Begriffsklärung)}
 
   def initialize html
     @doc = Nokogiri::HTML(html)
@@ -46,9 +46,9 @@ class ContentExtractor
 
   def internal_links element
     element.css("a[href^='/wiki/']").map do |link|
-      href = linked_page(link)
-      if ignore_link(href) && link.text.present?
-        [href, link.text]
+      name = linked_page(link)
+      if ignore_link(name) && link.text.present?
+        { name: name, text: link.text }
       end
     end.compact
   end
