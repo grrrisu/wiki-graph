@@ -4,7 +4,7 @@ class TermBuilder
   attr_reader :term
 
   def initialize name, language = 'de'
-    @term = Term.where(name: name, language: language).first_or_initialize
+    @term = Term.find_or_build(name, language)
   end
 
   def fetcher
@@ -39,25 +39,24 @@ class TermBuilder
   end
 
   def linked_terms
-    weight_linked_terms unless @weight
-    @weight.sort_by {|term, counters| counters.last }.reverse
+    weight_linked_terms if term.links.empty?
+    sorted = term.links.sort_by {|term| term.weight }.reverse
+    sorted.map {|link| [link.linked_term.name, link.linked_term_counter, link.linking_term_counter, link.weight]}
   end
 
   def weight_linked_terms
     @linked = count_linked_terms
     @linking = count_linking_terms
 
-    @weight = {}
-    @linked.each do |term, count|
-      @weight[term] = [] << count
+    term.links.clear
+
+    @linked.each do |name, linked_term_counter |
+      linking_term_counter =  @linking[name] || 0
+      term.links.build linked_term: Term.find_or_build(name, term.language),
+        linked_term_counter: linked_term_counter,
+        linking_term_counter: linking_term_counter,
+        weight: linked_term_counter + 2 * linking_term_counter
     end
-    @linking.each do |term, count|
-      @weight[term] << count
-    end
-    @weight.each do |term, counters|
-      @weight[term] << counters[0] + 2 * counters[1].to_i
-    end
-    @weight
   end
 
   def count_linked_terms
@@ -68,7 +67,7 @@ class TermBuilder
   end
 
   def count_linking_terms
-    linked_pages = extractor.linked_terms.map {|term| term[:name] }
+    linked_pages = extractor.linked_terms.map {|link| link[:name] }
     responses = fetcher.get_linked_pages(linked_pages)
 
     count_term(responses) do |item|
@@ -98,7 +97,7 @@ class TermBuilder
 
   private
 
-  # list [ {page, name / extractor } ]
+  # list [ {name, text / extractor } ]
   def count_term list
     list.inject({}) do |hash, term|
       hash[term[:name]] ||= 0

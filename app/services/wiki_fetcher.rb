@@ -44,12 +44,13 @@ class WikiFetcher
   def term_edit_request name
     Typhoeus::Request.new(
       "http://#{language}.wikipedia.org/w/index.php",
-      params: { action: 'edit', title: name }
+      params: { action: 'edit', title: name },
+      timeout: 30
     )
   end
 
   def term_show_request name
-    Typhoeus::Request.new "http://#{language}.wikipedia.org/wiki/#{name}", timeout: 20
+    Typhoeus::Request.new "http://#{language}.wikipedia.org/wiki/#{name}", timeout: 30
   end
 
   def fetch_term name
