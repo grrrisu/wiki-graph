@@ -10,7 +10,7 @@ class Term < ActiveRecord::Base
 
   def self.find_or_fetch name, language = 'de'
     builder = TermBuilder.new(name, language)
-    builder.fetch if builder.term.new_record?
+    builder.fetch! if builder.term.new_record?
     builder.term
   end
 
