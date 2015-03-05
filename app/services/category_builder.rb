@@ -16,11 +16,9 @@ class CategoryBuilder
   end
 
   def fetch categories
-    @cache = Set.new
     existing = find categories
     missing  = categories - existing.map(&:name)
     builts   = build_category fetch_multiple(missing)
-    # ... go up the tree ...
     existing + builts
   end
 
@@ -28,14 +26,12 @@ class CategoryBuilder
     existing  = find parents
     missing   = parents - existing.map(&:name)
     created   = create_category fetch_multiple(missing)
-    # .... go up the tree ....
     existing + created
   end
 
   def build_category responses
     responses.map do |response|
       parents   = search_parents categories(response[:extractor])
-      # ... go up the tree ....
       Category.new(name: response[:extractor].name, language: term.language, parents: parents)
     end
   end
@@ -43,17 +39,15 @@ class CategoryBuilder
   def create_category responses
     responses.map do |response|
       parents = search_parents categories(response[:extractor])
-      Rails.logger.info "***** parents: #{parents.map(&:name)}"
-      raise "Category #{response[:extractor].name} already exists!!!" if @cache.include? response[:extractor].name 
-      cat = Category.create(name: response[:extractor].name, language: term.language, parents: parents)
-      @cache.add response[:extractor].name
-      Rails.logger.info "***** Category #{response[:extractor].name} created"
-      cat
-    end
+      name = response[:extractor].name
+      unless Category.where(name: name, language: term.language).first 
+        Category.create(name: name, language: term.language, parents: parents)
+      end
+    end.compact
   end
 
   def find category_names
-    Category.where(name: category_names, language: term.language).to_a
+    Category.where(name: category_names, language: term.language)
   end
 
   def fetch_multiple pages
