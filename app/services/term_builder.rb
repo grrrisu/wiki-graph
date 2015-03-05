@@ -23,9 +23,14 @@ class TermBuilder
     CategoryBuilder.new(term, extractor)
   end
 
-  def fetch
+  def fetch_without_links
     set_name
     category_builder.set_categories
+    term
+  end
+
+  def fetch
+    fetch_without_links
     link_builder.weight_linked_terms
     term
   end

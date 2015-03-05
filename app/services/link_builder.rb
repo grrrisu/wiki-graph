@@ -23,7 +23,7 @@ class LinkBuilder
 
     @linked.each do |name, linked_term_counter |
       linking_term_counter =  @linking[name] || 0
-      term.links.build linked_term: Term.find_or_build(name, term.language),
+      term.links.build linked_term: Term.find_or_fetch_without_links(name, term.language),
         linked_term_counter: linked_term_counter,
         linking_term_counter: linking_term_counter,
         weight: linked_term_counter + 2 * linking_term_counter

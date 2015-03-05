@@ -18,8 +18,8 @@ class CategoryBuilder
   def fetch categories
     existing = find categories
     missing  = categories - existing.map(&:name)
-    builts   = build_category fetch_multiple(missing)
-    existing + builts
+    created  = create_category fetch_multiple(missing)
+    existing + created
   end
 
   def search_parents parents

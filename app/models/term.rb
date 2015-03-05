@@ -14,6 +14,12 @@ class Term < ActiveRecord::Base
     builder.term
   end
 
+  def self.find_or_fetch_without_links name, language = 'de'
+    builder = TermBuilder.new(name, language)
+    builder.fetch_without_links if builder.term.new_record?
+    builder.term
+  end
+
   def self.find_or_build(name, language)
     Term.where(name: name, language: language).first_or_initialize
   end
