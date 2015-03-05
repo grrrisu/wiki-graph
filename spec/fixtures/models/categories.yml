@@ -1,0 +1,18 @@
+root:
+  name: Kategorie:!Hauptkategorie
+  language: de
+strategic_game:
+  name: Kategorie:Strategie_Spiel
+  language: de
+web_game:
+  name: Kategorie:Webbasiertes_Spiel
+  language: de
+html5_game:
+  name: Kategorie:HTML5_Spiel
+  language: de
+game:
+  name: Kategorie:Spiel
+  language: de
+work:
+  name: Kategorie:Werk
+  language: de

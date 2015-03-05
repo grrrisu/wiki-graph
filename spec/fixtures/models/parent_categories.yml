@@ -1,0 +1,15 @@
+root_strategic_game:
+  parent: root
+  child: game
+game_strategic_game:
+  parent: game
+  child: strategic_game
+game_web_game:
+  parent: game
+  child: web_game
+root_work:
+  parent: root
+  child: work
+game_work:
+  parent: game
+  child: work

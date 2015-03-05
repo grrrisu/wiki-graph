@@ -7,4 +7,21 @@ class Category < ActiveRecord::Base
 
   validates :name, presence: true, uniqueness: true
   validates :language, presence: true, inclusion: { in: %w{de en}}
+
+  # TODO destroy child if no other parent, destroy parent if only child
+
+  def self.root language = 'de'
+    includes(:parents).where(language: language, parent_categories: {parent_id: nil}).first
+  end
+
+  def ancestors depth = 0, previous = {}, &block
+    value = block_given? ? yield(self) : self
+    previous[depth] ||= Set.new
+    current = previous.merge(depth => previous[depth] << value)
+    parents.each do |parent|
+      current = parent.ancestors depth + 1, current, &block
+    end
+    current
+  end
+
 end

@@ -5,6 +5,8 @@ class Term < ActiveRecord::Base
   has_many :linking_terms, through: :linking, class_name: 'Term', source: :term
   has_and_belongs_to_many :categories
 
+  # TODO destroy category if only term
+
   validates :name, presence: true, uniqueness: true
   validates :language, presence: true, inclusion: { in: %w{de en}}
 
@@ -22,6 +24,13 @@ class Term < ActiveRecord::Base
 
   def self.find_or_build(name, language)
     Term.where(name: name, language: language).first_or_initialize
+  end
+
+  def category_ancestors
+    categories.inject([]) do |array, category|
+      array << category.ancestors
+      array
+    end
   end
 
 end
