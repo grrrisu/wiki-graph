@@ -7,35 +7,61 @@ class CategoryBuilder
     @extractor = extractor
   end
 
-  def categories
+  def fetcher
+    @fetcher ||= WikiFetcher.new(term.language)
+  end
+
+  def categories(extractor)
     extractor.categories.map {|c| c[:name]}
   end
 
-  def fetch
+  def fetch categories
+    @cache = Set.new
     existing = find categories
     missing  = categories - existing.map(&:name)
-    builts   = build fetch_multiple(missing)
+    builts   = build_category fetch_multiple(missing)
+    # ... go up the tree ...
     existing + builts
   end
 
-  def build responses
+  def search_parents parents
+    existing  = find parents
+    missing   = parents - existing.map(&:name)
+    created   = create_category fetch_multiple(missing)
+    # .... go up the tree ....
+    existing + created
+  end
+
+  def build_category responses
     responses.map do |response|
-      Category.new name: response[:extractor].name, language: term.language
+      parents   = search_parents categories(response[:extractor])
+      # ... go up the tree ....
+      Category.new(name: response[:extractor].name, language: term.language, parents: parents)
     end
   end
 
-  def find categories
-    categories.map do |category|
-      Category.where(name: category, language: term.language).first.try(:name)
-    end.compact
+  def create_category responses
+    responses.map do |response|
+      parents = search_parents categories(response[:extractor])
+      Rails.logger.info "***** parents: #{parents.map(&:name)}"
+      raise "Category #{response[:extractor].name} already exists!!!" if @cache.include? response[:extractor].name 
+      cat = Category.create(name: response[:extractor].name, language: term.language, parents: parents)
+      @cache.add response[:extractor].name
+      Rails.logger.info "***** Category #{response[:extractor].name} created"
+      cat
+    end
+  end
+
+  def find category_names
+    Category.where(name: category_names, language: term.language).to_a
   end
 
   def fetch_multiple pages
-    WikiFetcher.new(term.language).get_linked_pages(pages)
+    fetcher.get_linked_pages(pages)
   end
 
   def set_categories
-    term.categories = fetch
+    term.categories = fetch categories(extractor)
   end
 
 end

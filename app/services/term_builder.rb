@@ -25,7 +25,7 @@ class TermBuilder
 
   def fetch
     set_name
-    term.categories = category_builder.fetch
+    category_builder.set_categories
     link_builder.weight_linked_terms
     term
   end
@@ -44,9 +44,5 @@ class TermBuilder
     sorted = term.links.sort_by {|term| term.weight }.reverse
     sorted.map {|link| [link.linked_term.name, link.linked_term_counter, link.linking_term_counter, link.weight]}
   end
-
-  # ---- categories ----
-
-  
 
 end
