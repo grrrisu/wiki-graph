@@ -34,6 +34,7 @@ class Term < ActiveRecord::Base
   end
 
   def intersect_categories other
+    raise ArgumentError if other.nil?
     res = categories.map do |category|
       other.categories.map do |other_category|
         category.intersect(other_category)
@@ -46,7 +47,7 @@ class Term < ActiveRecord::Base
       comp.zero? ? (a[2] <=> b[2]) : comp
     end.uniq do |r| 
       r[0].id
-    end
+    end.compact
 
     res.reject do |cat|
       res.any? {|other| other[0].is_child_of?(cat[0]) }

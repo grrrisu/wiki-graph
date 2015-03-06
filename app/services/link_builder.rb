@@ -23,10 +23,18 @@ class LinkBuilder
 
     @linked.each do |name, linked_term_counter |
       linking_term_counter =  @linking[name] || 0
-      term.links.build linked_term: Term.find_or_fetch_without_links(name, term.language),
+      linked_term = Term.find_or_fetch_without_links(name, term.language)
+      link = term.links.build linked_term: linked_term,
         linked_term_counter: linked_term_counter,
         linking_term_counter: linking_term_counter,
         weight: linked_term_counter + 2 * linking_term_counter
+
+      term.intersect_categories(linked_term).each do |result|
+        link.link_categories.build category: result[0],
+          link_depth: result[1],
+          linking_depth: result[2]
+      end
+
     end
   end
 

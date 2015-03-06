@@ -4,6 +4,8 @@ class Category < ActiveRecord::Base
   has_many :parents,  through: :parent_relations, class_name: 'Category'
   has_many :children, through: :children_relations, class_name: 'Category'
   has_and_belongs_to_many :terms
+  has_many :link_categories, dependent: :destroy
+  has_many :links, through: :link_categories
 
   validates :name, presence: true, uniqueness: true
   validates :language, presence: true, inclusion: { in: %w{de en}}

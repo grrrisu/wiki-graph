@@ -56,9 +56,8 @@ RSpec.describe Term, :type => :model do
 
     it "should intersect categories" do
       res = dawning.intersect_categories(chess)
-      expect(res.size).to be == 2
+      expect(res.size).to be == 1
       expect(res[0][0]).to be == strategic_game
-      expect(res[1][0]).to be == game
     end
 
   end
