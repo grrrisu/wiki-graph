@@ -7,6 +7,9 @@ game_strategic_game:
 game_web_game:
   parent: game
   child: web_game
+game_board_game:
+  parent: game
+  child: board_game
 root_work:
   parent: root
   child: work

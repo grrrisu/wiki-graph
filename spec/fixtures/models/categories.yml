@@ -10,6 +10,9 @@ web_game:
 html5_game:
   name: Kategorie:HTML5_Spiel
   language: de
+board_game:
+  name: Kategorie:Brettspiel
+  language: de
 game:
   name: Kategorie:Spiel
   language: de

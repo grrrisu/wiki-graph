@@ -1,7 +1,13 @@
 dawning:
-  name: dawning
+  name: Dawning
   language: de
   categories: 
     - web_game
     - strategic_game
     - work
+chess:
+  name: Schach
+  language: de
+  categories:
+    - strategic_game
+    - board_game

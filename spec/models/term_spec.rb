@@ -31,6 +31,7 @@ RSpec.describe Term, :type => :model do
   describe "categories" do
 
     let(:dawning)         { terms(:dawning) }
+    let(:chess)           { terms(:chess) }
     let(:strategic_game)  { categories(:strategic_game) }
     let(:web_game)        { categories(:web_game) }
     let(:game)            { categories(:game) }
@@ -51,6 +52,13 @@ RSpec.describe Term, :type => :model do
       expect(ancestors[0][0]).to be == Set.new([strategic_game])
       expect(ancestors[0][1]).to be == Set.new([game])
       expect(ancestors[0][2]).to be == Set.new([root])
+    end
+
+    it "should intersect categories" do
+      res = dawning.intersect_categories(chess)
+      expect(res.size).to be == 2
+      expect(res[0][0]).to be == strategic_game
+      expect(res[1][0]).to be == game
     end
 
   end

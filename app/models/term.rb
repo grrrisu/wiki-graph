@@ -33,4 +33,24 @@ class Term < ActiveRecord::Base
     end
   end
 
+  def intersect_categories other
+    res = categories.map do |category|
+      other.categories.map do |other_category|
+        category.intersect(other_category)
+      end.sort do |a, b|
+        comp = (a[1].to_i <=> b[1].to_i)
+        comp.zero? ? (a[2] <=> b[2]) : comp
+      end.first
+    end.sort do |a, b|
+      comp = (a[1].to_i <=> b[1].to_i)
+      comp.zero? ? (a[2] <=> b[2]) : comp
+    end.uniq do |r| 
+      r[0].id
+    end
+
+    res.reject do |cat|
+      res.any? {|other| other[0].is_child_of?(cat[0]) }
+    end
+  end
+
 end
