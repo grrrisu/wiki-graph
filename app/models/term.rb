@@ -1,9 +1,9 @@
 class Term < ActiveRecord::Base
-  has_many :links
-  has_many :linking, foreign_key: :linked_term_id, class_name: 'Link'
-  has_many :linked_terms,  through: :links, class_name: 'Term', dependent: :destroy
-  has_many :linking_terms, through: :linking, class_name: 'Term', source: :term
-  has_and_belongs_to_many :categories
+  has_many :links, inverse_of: :term
+  has_many :linking, foreign_key: :linked_term_id, class_name: 'Link', inverse_of: :linked_term
+  has_many :linked_terms,  through: :links, class_name: 'Term', inverse_of: :linking_terms, dependent: :destroy
+  has_many :linking_terms, through: :linking, class_name: 'Term', source: :term, inverse_of: :linked_terms
+  has_and_belongs_to_many :categories, inverse_of: :terms
 
   # TODO destroy category if only term
 
