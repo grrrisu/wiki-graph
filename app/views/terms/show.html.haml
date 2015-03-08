@@ -1,0 +1,8 @@
+%h1= @term.name
+%table.linked_terms{border: 1}
+  - @term.links.each do |link|
+    %tr
+      %td= link.linked_term.name
+      %td= link.linked_term_counter
+      %td= link.linking_term_counter
+      %td= link.categories.map(&:name).join(', ')

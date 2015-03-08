@@ -1,0 +1,4 @@
+%h1 Search for Term
+= form_for :term, url: terms_path do |f|
+  = f.text_field :name
+  = f.submit :search
