@@ -1,6 +1,6 @@
 class Category < ActiveRecord::Base
-  has_many :parent_relations, foreign_key: :child_id, class_name: 'ParentCategory', inverse_of: :parent
-  has_many :children_relations, foreign_key: :parent_id, class_name: 'ParentCategory', inverse_of: :child, dependent: :destroy
+  has_many :parent_relations, foreign_key: :child_id, class_name: 'ParentCategory', inverse_of: :child
+  has_many :children_relations, foreign_key: :parent_id, class_name: 'ParentCategory', inverse_of: :parent, dependent: :destroy
   has_many :parents,  through: :parent_relations, class_name: 'Category', inverse_of: :children
   has_many :children, through: :children_relations, class_name: 'Category', inverse_of: :parents
   has_and_belongs_to_many :terms, inverse_of: :categories
