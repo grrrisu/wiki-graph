@@ -1,5 +1,6 @@
 %h1= @term.name
-%table.linked_terms{border: 1}
+%h3 Linked Terms
+%table.table.linked_terms
   - @term.links.each do |link|
     %tr
       %td= link.linked_term.name
