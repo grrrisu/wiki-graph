@@ -38,7 +38,7 @@ class ContentExtractor
 
   def name
     if link = doc.css('link[rel="alternate"][hreflang="x-default"]')
-      link.attribute('href').value.gsub('/wiki/', '')
+      URI.unescape(link.attribute('href').value.gsub('/wiki/', ''))
     end
   end
 
