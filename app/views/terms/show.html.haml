@@ -1,9 +1,9 @@
 %h1= @term.name
 %h3 Linked Terms
 %table.table.linked_terms
-  - @term.links.each do |link|
+  - @term.links.order(linked_term_counter: :desc, linking_term_counter: :desc).each do |link|
     %tr
       %td= link.linked_term.name
       %td= link.linked_term_counter
       %td= link.linking_term_counter
-      %td= link.categories.map(&:name).join(', ')
+      %td= link.link_categories.sort_by(&:link_depth).map {|c| "[#{c.category.name}, #{c.link_depth}, #{c.linking_depth}]"}.join(', ')
