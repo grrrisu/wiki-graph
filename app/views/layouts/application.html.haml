@@ -1,0 +1,14 @@
+!!! html5
+%html{:lang => 'en'}
+  %head
+    %title= "Wikigraph - #{@term.try(:name)}"
+    %meta{ :charset => "utf-8" }
+    %meta{ :name => "viewport", :content => "width=device-width, initial-scale=1.0" }
+    %meta{ 'http-equiv' => "X-UA-Compatible", :content => "IE=edge,chrome=1" }
+    %meta{ :description => "Visualize Wikipedia Terms"}
+    = stylesheet_link_tag "application", :media => "all"
+    = csrf_meta_tag
+    = javascript_include_tag "application"
+  %body
+    .container-fluid
+      = yield

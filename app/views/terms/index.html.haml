@@ -1,4 +1,4 @@
 %h1 Search for Term
-= form_for :term, url: terms_path do |f|
-  = f.text_field :name
-  = f.submit :search
+= simple_form_for :term, url: terms_path, wrapper: :inline_form, html: { class: 'form-inline' } do |f|
+  = f.input :name, placeholder: 'term'
+  = f.submit 'Search', class: 'btn btn-primary'
