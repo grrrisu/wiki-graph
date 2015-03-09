@@ -18,6 +18,7 @@ gem 'haml-rails'
 gem 'bootstrap-sass'
 gem 'simple_form', '>= 3.1.0'
 gem 'thin'
+gem 'select2-rails'
 
 gem 'typhoeus'
 gem 'wikicloth'
