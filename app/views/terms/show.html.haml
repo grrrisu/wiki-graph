@@ -7,3 +7,14 @@
       %td= link.linked_term_counter
       %td= link.linking_term_counter
       %td= link.link_categories.sort_by(&:link_depth).map {|c| "[#{c.category.name}, #{c.link_depth}, #{c.linking_depth}]"}.join(', ')
+
+%h3 Categories
+%table.table.categories
+  - @term.categories.each do |category|
+    %tr
+      %td{colspan: 2}= category.name
+      - category.ancestors{|c| c.name}.each do |depth, cats|
+        %tr
+          %td= depth
+          %td= cats.to_a.join(', ')
+
