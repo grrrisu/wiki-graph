@@ -2,5 +2,5 @@
 
 === Fixtures
 
-page (Wikipedia) -> markup (textarea) -> article (to_html) -> text (strip_tags)
+page (Wikipedia)
 

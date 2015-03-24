@@ -26,6 +26,10 @@ class Term < ActiveRecord::Base
     Term.where(name: name, language: language).first_or_initialize
   end
 
+  def to_param
+    name
+  end
+
   def category_ancestors
     categories.inject([]) do |array, category|
       array << category.ancestors
@@ -52,6 +56,15 @@ class Term < ActiveRecord::Base
     res.reject do |cat|
       res.any? {|other| other[0].is_child_of?(cat[0]) }
     end
+  end
+
+  def links_weighted
+    links.order(weight: :desc)
+    #links.order(linked_term_counter: :desc, linking_term_counter: :desc)
+  end
+
+  def linked_terms_weighted
+    linked_terms.order('links.linked_term_counter DESC, links.linking_term_counter DESC')
   end
 
 end

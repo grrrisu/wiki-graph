@@ -1,0 +1,60 @@
+%svg.chart
+:javascript
+
+  // Computes the angle of an arc, converting from radians to degrees.
+  function angle(d) {
+    var a = (d.startAngle + d.endAngle) * 90 / Math.PI - 90;
+    return a > 90 ? a - 180 : a;
+  }
+
+  data = #{ @term.links_weighted.map {|link| {"name" => link.linked_term.name, "value" => link.weight} }.to_json };
+
+  var width = 500,
+    height = 500,
+    radius = Math.min(width, height) / 2;
+    // min value 2%
+    min_value = data.reduce(function(sum, d) { return sum + d.value; }, 0) / 50;
+
+  var color = d3.scale.ordinal()
+      .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+
+  var arc = d3.svg.arc()
+      .outerRadius(radius - 30)
+      .innerRadius(0);
+
+  var pie = d3.layout.pie()
+      .sort(null)
+      .value(function(d) { return d.value; });
+
+  var svg = d3.select(".chart")
+      .attr("width", width)
+      .attr("height", height)
+    .append("g")
+      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+
+  data.forEach(function(d) {
+    d.value = +d.value;
+  });
+
+  var g = svg.selectAll(".arc")
+      .data(pie(data))
+      .enter()
+      .append("g")
+      .attr("class", "arc");
+
+  g.append("path")
+      .attr("d", arc)
+      .style("fill", function(d) { return color(d.data.name); });
+
+  // second arc for labels
+  var arc2 = d3.svg.arc()
+    .outerRadius(radius - 100)
+    .innerRadius(radius - 100);
+
+  // label attached to second arc
+  g.append("text")
+    .attr("transform", function(d) { return "translate(" + arc2.centroid(d) + ") rotate("+ angle(d) +")"; })
+    .attr("dy", ".35em")
+    .style("text-anchor", "middle")
+    .text(function(d) { if(d.data.value > 0) return d.data.name; });

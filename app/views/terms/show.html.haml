@@ -1,7 +1,7 @@
 %h1= @term.name
 %h3 Linked Terms
 %table.table.linked_terms
-  - @term.links.order(linked_term_counter: :desc, linking_term_counter: :desc).each do |link|
+  - @term.links_weighted.each do |link|
     %tr
       %td= link.linked_term.name
       %td= link.linked_term_counter
@@ -12,7 +12,8 @@
 %table.table.categories
   - @term.categories.each do |category|
     %tr
-      %td{colspan: 2}= category.name
+      %td{colspan: 2}
+        %strong= category.name
       - category.ancestors{|c| c.name}.each do |depth, cats|
         %tr
           %td= depth
